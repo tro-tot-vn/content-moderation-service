@@ -1,3 +1,5 @@
+from typing import Optional
+
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
@@ -5,8 +7,8 @@ import torch, time
 
 # ==== cấu hình tối thiểu ====
 MODEL_DIR = "lamdx4/phobert-vi-moderation"
-MAX_LENGTH = 192
-THRESHOLD = 0.5
+MAX_LENGTH = 512
+DEFAULT_THRESHOLD = 0.5
 
 # ==== load model 1 lần khi khởi động ====
 tokenizer = AutoTokenizer.from_pretrained(MODEL_DIR, use_fast=False)
@@ -21,6 +23,7 @@ app = FastAPI()
 
 class Payload(BaseModel):
     text: str
+    threshold: Optional[float] = None
 
 
 @app.post("/moderate")
@@ -29,6 +32,9 @@ def moderate(p: Payload):
     if not text:
         raise HTTPException(status_code=422, detail="Field 'text' must be a non-empty string.")
 
+    THRESHOLD = p.threshold if p.threshold is not None else DEFAULT_THRESHOLD
+    if not (0.0 <= THRESHOLD <= 1.0):
+        raise HTTPException(status_code=422, detail="Field 'threshold' must be between 0 and 1.")
     t0 = time.time()
     enc = tokenizer(text, return_tensors="pt", truncation=True, max_length=MAX_LENGTH).to(DEVICE)
     logits = model(**enc).logits
