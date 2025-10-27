@@ -4,7 +4,7 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch, time
 
 # ==== cấu hình tối thiểu ====
-MODEL_DIR = "models/phobert-moderation"
+MODEL_DIR = "lamdx4/phobert-vi-moderation"
 MAX_LENGTH = 192
 THRESHOLD = 0.5
 
