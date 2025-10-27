@@ -1,0 +1,12 @@
+models/
+└── phobert-moderation/
+    ├── added_tokens.json
+    ├── bpe.codes
+    ├── config.json
+    ├── model.safetensors
+    ├── special_tokens_map.json
+    ├── tokenizer_config.json
+    ├── training_args.bin
+    └── vocab.txt
+
+enter "uvicorn src.server:app --host ... --port ..." to run
