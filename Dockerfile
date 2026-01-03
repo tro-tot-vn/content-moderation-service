@@ -1,7 +1,7 @@
 # ============================================
 # Stage 1: Builder - Install dependencies (CPU-only)
 # ============================================
-FROM python:3.11-slim as builder
+FROM python:3.11-slim-bookworm as builder
 
 WORKDIR /app
 
@@ -25,7 +25,7 @@ RUN pip install --user --no-cache-dir -r requirements.txt
 # ============================================
 # Stage 2: Runtime - Optimized final image
 # ============================================
-FROM python:3.11-slim
+FROM python:3.11-slim-bookworm
 
 # Create non-root user
 RUN useradd -m -u 1000 appuser
